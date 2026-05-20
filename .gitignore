@@ -1,0 +1,7 @@
+spamham/
+.vscode/
+__pycache__/
+*.pkl
+test.py
+models/
+data/
