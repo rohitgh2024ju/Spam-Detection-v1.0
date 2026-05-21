@@ -2,6 +2,7 @@
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from vectorizer import vectorize_dataset
+import joblib
 
 
 def model_train(evaluation=False):
@@ -28,6 +29,10 @@ def model_train(evaluation=False):
 
         confused_matrix = confusion_matrix(y_test, predictions)
         print("\n--Confusion Matrix--\n", confused_matrix)
+
+    joblib.dump(model, "models/spam_detector_svm.pkl")
+
+    print("Model saved successfully!")
 
 
 if __name__ == "__main__":
