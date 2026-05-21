@@ -26,4 +26,5 @@ def vectorize_dataset():
     return (X_train_vectorized, X_test_vectorized, y_train, y_test)
 
 
-vectorize_dataset()
+if __name__ == "__main__":
+    vectorize_dataset()
