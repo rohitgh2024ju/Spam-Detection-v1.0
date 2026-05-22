@@ -30,8 +30,8 @@ def model_train(evaluation=False):
         confused_matrix = confusion_matrix(y_test, predictions)
         print("\n--Confusion Matrix--\n", confused_matrix)
 
+    # save model
     joblib.dump(model, "models/spam_detector_svm.pkl")
-
     print("Model saved successfully!")
 
 
