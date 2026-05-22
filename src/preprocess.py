@@ -22,3 +22,7 @@ def load_and_preprocess():
     y = df["label"]
 
     return x, y
+
+
+if __name__ == "__main__":
+    load_and_preprocess()
