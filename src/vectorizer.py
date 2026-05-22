@@ -1,8 +1,6 @@
-# converting text-> vector
 from preprocess import load_and_preprocess
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-
 import joblib
 
 
@@ -10,10 +8,16 @@ def vectorize_dataset():
     X, y = load_and_preprocess()
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    vectorizer = TfidfVectorizer(max_features=20000)
+    vectorizer = TfidfVectorizer(
+        stop_words="english",
+        lowercase=True,
+        max_features=25000,
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+    )
 
     X_train_vectorized = vectorizer.fit_transform(X_train)
     print(X_train_vectorized.shape)
@@ -26,5 +30,5 @@ def vectorize_dataset():
     return (X_train_vectorized, X_test_vectorized, y_train, y_test)
 
 
-vectorize_dataset()
-
+if __name__ == "__main__":
+    vectorize_dataset()

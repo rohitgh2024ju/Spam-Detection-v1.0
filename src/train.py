@@ -1,4 +1,4 @@
-# actual training
+import time
 import joblib
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
@@ -12,14 +12,14 @@ def model_train(evaluation=False):
     # load model
     model = LinearSVC(dual=False, random_state=42)
 
-    # train
+    # train and measure execution time
+    start_time = time.perf_counter()
     model.fit(X_train_vectorized, y_train)
-
-    joblib.dump(model, "models/spam_detector_svm.pkl")
-    print("Model saved successfully to 'models/spam_detector_svm.pkl'!")
+    end_time = time.perf_counter()
 
     # prediction
     predictions = model.predict(X_test_vectorized)
+    print(f"Time taken to train model: {end_time - start_time}")
     print(predictions[:10])
 
     if evaluation:
@@ -33,33 +33,9 @@ def model_train(evaluation=False):
         confused_matrix = confusion_matrix(y_test, predictions)
         print("\n--Confusion Matrix--\n", confused_matrix)
 
+    joblib.dump(model, "models/spam_detector_svm.pkl")
+    print("Model saved successfully!")
+
 
 if __name__ == "__main__":
     model_train(evaluation=True)
-
-"""
-(26931, 20000)
-(6733, 20000)
-vectorizer is saved successfully!
-(26931, 20000)
-(6733, 20000)
-vectorizer is saved successfully!
-['spam' 'spam' 'ham' 'ham' 'spam' 'ham' 'ham' 'ham' 'spam' 'ham']
-Accuracy:  0.999405911183722
-
---Classification Report--
-               precision    recall  f1-score   support
-
-         ham       1.00      1.00      1.00      3269
-        spam       1.00      1.00      1.00      3464
-
-    accuracy                           1.00      6733
-   macro avg       1.00      1.00      1.00      6733
-weighted avg       1.00      1.00      1.00      6733
-
-
---Confusion Matrix--
- [[3265    4]
- [   0 3464]]
-
-"""
