@@ -3,9 +3,11 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from vectorizer import vectorize_dataset
 import joblib
+import time
 
 
-def model_train(evaluation=False):
+def model_train(evaluation=False, display_time=False):
+    start_time = time.perf_counter()
     # load configs
     X_train_vectorized, X_test_vectorized, y_train, y_test = vectorize_dataset()
 
@@ -14,6 +16,11 @@ def model_train(evaluation=False):
 
     # train
     model.fit(X_train_vectorized, y_train)
+
+    end_time = time.perf_counter()
+
+    if display_time:
+        print("Time taken to train model: ", end_time - start_time)
 
     # prediction
     predictions = model.predict(X_test_vectorized)
@@ -36,4 +43,4 @@ def model_train(evaluation=False):
 
 
 if __name__ == "__main__":
-    model_train(evaluation=True)
+    model_train(evaluation=True, display_time=True)
