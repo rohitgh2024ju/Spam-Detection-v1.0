@@ -10,10 +10,16 @@ def vectorize_dataset():
     X, y = load_and_preprocess()
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    vectorizer = TfidfVectorizer(max_features=20000)
+    vectorizer = TfidfVectorizer(
+        max_features=25000,
+        stop_words="english",
+        lowercase=True,
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+    )
 
     X_train_vectorized = vectorizer.fit_transform(X_train)
     print(X_train_vectorized.shape)

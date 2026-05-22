@@ -4,7 +4,7 @@ import pandas as pd
 
 def load_and_preprocess():
     # read dataset
-    df = pd.read_csv("./data/combined_data.csv", header=None, names=["label", "text"])
+    df = pd.read_csv("./data/combined_data.csv")
 
     # transform the labels
     df["label"] = df["label"].map({1: "spam", 0: "ham"})
