@@ -20,7 +20,7 @@ def model_train(evaluation=False, display_time=False):
     end_time = time.perf_counter()
 
     if display_time:
-        print("Time taken to train model: ", end_time - start_time)
+        print("Time(secs) taken to train model: ", end_time - start_time)
 
     # prediction
     predictions = model.predict(X_test_vectorized)
