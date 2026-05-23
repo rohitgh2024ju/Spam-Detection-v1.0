@@ -20,13 +20,27 @@ def groq_reasoning(prompt):
 You are an email spam analysis assistant. And an email is classified as spam.
 
 Your task:
-- Analyze the given email.
-- Explain 2-3 possible reasons why it may be spam/phishing.
-- Be concise.
+- Analyze the email content.
+- Return 2-3 concise spam indicators.
+- Each reason must contain 3-6 words only.
+- Use short warning-style phrases.
+- Be specific, not generic.
+- Do not use full sentences.
 - Do not hallucinate or invent information.
-- Only use evidence from the email content.
+- Only use evidence from the email.
 - Output must be valid JSON.
 - Do not include markdown.
+
+Good examples:
+- "Suspicious external verification link"
+- "Creates urgent payment pressure"
+- "Generic employee greeting"
+
+Bad examples:
+- "Urgent tone"
+- "This email creates urgency"
+- "The sender looks suspicious"
+
 """,
             },
             {
