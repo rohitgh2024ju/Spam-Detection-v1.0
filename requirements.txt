@@ -6,3 +6,4 @@ pandas
 joblib
 python-dotenv
 groq
+python-multipart
