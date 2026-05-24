@@ -1,5 +1,6 @@
 # setup of api server
 from fastapi import FastAPI, HTTPException, status, Form
+from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
 from src.predict import predict_mail
 import os
@@ -76,6 +77,14 @@ app = FastAPI(
     title="Email Spam Detection API",
     description="Production-ready API for classifying emails using an SVM model. Accepts raw multi-line string inputs.",
     version="1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://mail.google.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
