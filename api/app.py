@@ -1,11 +1,15 @@
 # setup of api server
-from fastapi import FastAPI, HTTPException, status, Form
+from fastapi import FastAPI, HTTPException, status, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
 from src.predict import predict_mail
 import os
 from dotenv import load_dotenv
 import json
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 load_dotenv()
 
@@ -68,16 +72,33 @@ Return output in this format:
 
     result = chat_completion.choices[0].message.content
 
-    result_json = json.loads(result)
+    try:
+        result_json = json.loads(result)
+    except json.JSONDecodeError:
+        return ["Suspicious message formatting"]
+    
+    return result_json.get("reasons", ["suspicious message formatting"])
 
-    return result_json["reasons"]
 
+
+def real_ip(request: Request):
+    forward = request.headers.get("X-Forwarded-For")
+
+    if forward:
+        return forward.split(",")[0]
+    
+    return request.client.host
+
+limiter = Limiter(key_func=real_ip)
 
 app = FastAPI(
     title="Email Spam Detection API",
     description="Production-ready API for classifying emails using an SVM model. Accepts raw multi-line string inputs.",
     version="1.0",
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -101,7 +122,8 @@ def home():
 
 
 @app.post("/predict", status_code=status.HTTP_200_OK)
-async def predict_mail_trigger(message: str = Form(...)):
+@limiter.limit("15/minute")
+async def predict_mail_trigger(request: Request, message: str = Form(...)):
     """
     Takes text data in any format (including raw newlines, tabs, and unescaped quotes)
     via application/x-www-form-urlencoded or multipart/form-data.
